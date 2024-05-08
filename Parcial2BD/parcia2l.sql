@@ -66,7 +66,7 @@ FOREIGN KEY (persons_id) REFERENCES persons(persons_id)
 
 commit;
 
---1 - Generar una funciÛn que retorne cuantos aÒos tiene una persona.
+--1 - Generar una funci√≥n que retorne cuantos a√±os tiene una persona.
 
 CREATE OR REPLACE FUNCTION person_age(person_birthdate DATE) 
 RETURN NUMBER
@@ -78,8 +78,8 @@ BEGIN
 END;
 SELECT person_age(birthdate) AS edad FROM persons WHERE persons_id =91;
 
---2 - los niÒos y viejos y enfermos no pueden trabajar en la mina. por ello cree un trigger que sea capaz de garantizar que ning˙n empleado viole esas
---restricciones. Nota: niÒo es considerado inferior a 12 aÒos y un viejo es alguien mayor de 70 aÒos Recuerda que no se admiten personas enfermas.
+--2 - los ni√±os y viejos y enfermos no pueden trabajar en la mina. por ello cree un trigger que sea capaz de garantizar que ning√∫n empleado viole esas
+--restricciones. Nota: ni√±o es considerado inferior a 12 a√±os y un viejo es alguien mayor de 70 a√±os Recuerda que no se admiten personas enfermas.
 
 CREATE OR REPLACE TRIGGER conditions_to_work
 BEFORE INSERT OR UPDATE ON persons FOR EACH ROW
@@ -96,7 +96,7 @@ BEGIN
    
   SELECT diagnostics_id INTO var_sick FROM persons_medical_check  WHERE persons_id = :NEW.persons_id;
     IF var_sick != 1 THEN
-    RAISE_APPLICATION_ERROR(-20002, 'El empleado est· enfermo y no puede trabajar en la mina.');
+    RAISE_APPLICATION_ERROR(-20002, 'El empleado est√° enfermo y no puede trabajar en la mina.');
       END IF;
 END;
 
@@ -136,7 +136,9 @@ AS
 END LOOP;
 END;
 
---5 - crear una funciÛn que retorne si un trabajador est· vivo o muerto.
+EXECUTE women_of_a_mine('&InsertHereNameMine');
+
+--5 - crear una funci√≥n que retorne si un trabajador est√° vivo o muerto.
 CREATE OR REPLACE FUNCTION alive_dead(worker workers.workers_id%TYPE)
 RETURN VARCHAR2
   IS
@@ -155,7 +157,7 @@ RETURN VARCHAR2
 END;
 SELECT alive_dead(799) FROM dual;
 
---6 - crear una funciÛn que retorne la cantidad de kilos que produce de una mina.
+--6 - crear una funci√≥n que retorne la cantidad de kilos que produce de una mina.
 
 CREATE OR REPLACE FUNCTION count_kilos_mine(mine mines.mine_name%TYPE)
 RETURN VARCHAR
@@ -200,6 +202,8 @@ SELECT COUNT(*) INTO number_of_infected FROM persons p
    INNER JOIN mines m ON w.mines_id = m.mines_id  WHERE LOWER(m.mine_name) = LOWER(mine) AND pmc.diagnostics_id = 2;
    DBMS_OUTPUT.PUT_LINE('La cantidad de infectados en la mina: '||mine|| ' son de : ' ||number_of_infected||' infectados  ');
 END;
+
+EXECUTE number_infected_VIH('&mine');
 
 --9 - Cree un procedimiento que muestre el mejor trabajador de cada mina.
 SET SERVEROUTPUT ON;
